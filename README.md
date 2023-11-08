@@ -19,7 +19,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 ## Deploy with Truefoundry
 
-1. Install servicefoundry
+1. Install `servicefoundry`
 
 ```shell
 python -m pip install -U servicefoundry
@@ -31,7 +31,10 @@ python -m pip install -U servicefoundry
 sfy login --host <Truefoundry Platform URL>
 ```
 
-3. Add a deploy.py
+1. Add a deploy.py
+
+- Edit your `host` and optionally `path` for endpoint ([Docs](https://docs.truefoundry.com/docs/routing ))
+- Edit your `workspace_fqn` ([Docs](https://docs.truefoundry.com/docs/workspace#copy-workspace-fqn-fully-qualified-name))
 
 ```python
 import argparse
