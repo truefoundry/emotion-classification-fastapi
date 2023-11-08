@@ -13,8 +13,8 @@ model = None
 async def lifespan(app: FastAPI):
     global model
     model = pipeline(
-        "sentiment-analysis",
-        model="michellejieli/emotion_text_classifier",
+        "text-classification",
+        model="bhadresh-savani/albert-base-v2-emotion",
     )
     yield
 
