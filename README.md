@@ -87,8 +87,8 @@ service = Service(
     # --- Resources ---
     resources=Resources(
         cpu_request=0.5, cpu_limit=0.5,
-        memory_request=500, memory_limit=1000,
-        ephemeral_storage_request=100, ephemeral_storage_limit=500
+        memory_request=1000, memory_limit=1000,
+        ephemeral_storage_request=500, ephemeral_storage_limit=500
     )
 )
 
