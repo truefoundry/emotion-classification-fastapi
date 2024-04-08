@@ -1,7 +1,6 @@
 FastAPI Emotion Classification
 ---
-
-This example wraps an Emotion Classification model from Huggingface Hub in a FastAPI app
+This example wraps an Emotion Classification model from Huggingface Hub in a FastAPI app.
 
 ## Run Locally
 
