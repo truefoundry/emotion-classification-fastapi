@@ -85,14 +85,17 @@ service = Service(
 
     # --- Resources ---
     resources=Resources(
-        cpu_request=0.5, cpu_limit=0.5,
-        memory_request=1000, memory_limit=1000,
-        ephemeral_storage_request=500, ephemeral_storage_limit=500
+        cpu_request=0.5,
+        cpu_limit=0.5,
+        memory_request=1000,
+        memory_limit=1000,
+        ephemeral_storage_request=500,
+        ephemeral_storage_limit=500
     )
 )
 
 # Get your workspace fqn from https://docs.truefoundry.com/docs/workspace#copy-workspace-fqn-fully-qualified-name
-service.deploy(workspace_fqn="<Enter Workspace FQN>")
+service.deploy(workspace_fqn="<Enter Workspace FQN>", wait=False)
 ```
 
 4. Deploy!
