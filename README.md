@@ -32,8 +32,8 @@ tfy login --host <Truefoundry Platform URL>
 
 1. Add a deploy.py
 
-- Edit your `host` and optionally `path` for endpoint ([Docs](https://docs.truefoundry.com/docs/routing ))
-- Edit your `workspace_fqn` ([Docs](https://docs.truefoundry.com/docs/workspace#copy-workspace-fqn-fully-qualified-name))
+- Edit your `host` and optionally `path` for endpoint ([Docs](https://docs.truefoundry.com/docs/routing))
+- Edit your `workspace_fqn` ([Docs](https://docs.truefoundry.com/docs/key-concepts#get-workspace-fqn))
 
 ```python
 import argparse
