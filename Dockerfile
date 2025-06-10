@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 python:3.10-slim
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -U pip setuptools wheel && pip install -r /tmp/requirements.txt
+RUN pip install -U pip setuptools wheel && pip install -r /tmp/requirements.txt --timeout 60
 EXPOSE 8000
 WORKDIR /app
 COPY . /app/
