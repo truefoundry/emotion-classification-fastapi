@@ -53,12 +53,10 @@ jobs:
       extra_image_tag: |
         ${{ needs.format_tag.outputs.version_tag }}
         ${{ needs.format_tag.outputs.alt_version_tag }}
-      depot_project_id: ${{ vars.DEPOT_PROJECT_ID }}
       image_artifact_name: 'emotion-classification'
       artifactory_registry_url: 'public.ecr.aws'
       artifactory_repository_url: 'public.ecr.aws/truefoundrycharts'
     secrets:
-      depot_token: ${{ secrets.DEPOT_API_KEY }}
       artifactory_username: 'AWS'
       artifactory_password: ''
 
