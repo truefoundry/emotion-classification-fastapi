@@ -2,8 +2,8 @@ name: Build and Push Emotion Classification Image
 
 on:
   push:
-    # tags:
-    #   - v*
+    tags:
+      - v*
 
 permissions:
   id-token: write
@@ -16,7 +16,9 @@ concurrency:
 env:
   GITHUB_SHA: ${{ github.sha }}
   TAG_PREFIX: 'v'
-  REPOSITORY_URL: 'public.ecr.aws/truefoundrycharts/emotion-classification'
+  REPOSITORY_URL: 'public.ecr.aws/truefoundrycloud/emotion-classification'
+  PUBLIC_ECR_REGISTRY_URL: 'public.ecr.aws'
+  PUBLIC_ECR_REPOSTIORY_URL: 'public.ecr.aws/truefoundrycloud'
 
 jobs:
   format_tag:
@@ -45,7 +47,7 @@ jobs:
   build:
     name: Build
     needs: format_tag
-    uses: truefoundry/github-workflows-public/.github/workflows/build.yml@push-to-ecr
+    uses: truefoundry/github-workflows-public/.github/workflows/build.yml@main
     with:
       image_tag: ${{ github.sha }}
       enable_ecr: true
@@ -54,22 +56,16 @@ jobs:
         ${{ needs.format_tag.outputs.version_tag }}
         ${{ needs.format_tag.outputs.alt_version_tag }}
       image_artifact_name: 'emotion-classification'
-      artifactory_registry_url: 'public.ecr.aws'
-      artifactory_repository_url: 'public.ecr.aws/truefoundrycharts'
-    secrets:
-      artifactory_username: 'AWS'
-      artifactory_password: ''
+      artifactory_registry_url: ${{ env.PUBLIC_ECR_REGISTRY_URL }}
+      artifactory_repository_url: ${{ env.PUBLIC_ECR_REPOSITORY_URL }}
 
   push_soci_index:
     name: Push SOCI Index
     needs: build
-    uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@push-to-ecr
+    uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
     with:
       enable_ecr: true
-      artifactory_registry_url: 'public.ecr.aws'
-      artifactory_repository_url: 'public.ecr.aws/truefoundrycharts'
+      artifactory_registry_url: ${{ env.PUBLIC_ECR_REGISTRY_URL }}
+      artifactory_repository_url: ${{ env.PUBLIC_ECR_REPOSITORY_URL }}
       image_artifact_name: 'emotion-classification'
       image_tag: ${{ github.sha }}
-    secrets:
-      artifactory_username: 'AWS'
-      artifactory_password: ''
