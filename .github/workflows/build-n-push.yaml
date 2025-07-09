@@ -2,8 +2,8 @@ name: Build and Push Emotion Classification Image
 
 on:
   push:
-    tags:
-      - v*
+    # tags:
+    #   - v*
 
 permissions:
   id-token: write
@@ -44,7 +44,7 @@ jobs:
   build:
     name: Build
     needs: format_tag
-    uses: truefoundry/github-workflows-public/.github/workflows/build.yml@main
+    uses: truefoundry/github-workflows-public/.github/workflows/build.yml@update-workflow
     with:
       image_tag: ${{ github.sha }}
       enable_public_ecr: true
@@ -55,14 +55,18 @@ jobs:
       image_artifact_name: 'emotion-classification'
       artifactory_registry_url: 'public.ecr.aws'
       artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
+    secrets:
+     ecr_role_arn: ${{ secrets.ECR_IAM_ROLE_ARN }}
 
   push_soci_index:
     name: Push SOCI Index
     needs: build
-    uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
+    uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@update-workflow
     with:
       enable_public_ecr: true
       artifactory_registry_url: 'public.ecr.aws'
       artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
       image_artifact_name: 'emotion-classification'
       image_tag: ${{ github.sha }}
+    secrets:
+     ecr_role_arn: ${{ secrets.ECR_IAM_ROLE_ARN }}
