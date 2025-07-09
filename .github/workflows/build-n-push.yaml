@@ -16,9 +16,6 @@ concurrency:
 env:
   GITHUB_SHA: ${{ github.sha }}
   TAG_PREFIX: 'v'
-  REPOSITORY_URL: 'public.ecr.aws/truefoundrycloud/emotion-classification'
-  PUBLIC_ECR_REGISTRY_URL: 'public.ecr.aws'
-  PUBLIC_ECR_REPOSTIORY_URL: 'public.ecr.aws/truefoundrycloud'
 
 jobs:
   format_tag:
@@ -56,8 +53,8 @@ jobs:
         ${{ needs.format_tag.outputs.version_tag }}
         ${{ needs.format_tag.outputs.alt_version_tag }}
       image_artifact_name: 'emotion-classification'
-      artifactory_registry_url: ${{ env.PUBLIC_ECR_REGISTRY_URL }}
-      artifactory_repository_url: ${{ env.PUBLIC_ECR_REPOSITORY_URL }}
+      artifactory_registry_url: 'public.ecr.aws'
+      artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
 
   push_soci_index:
     name: Push SOCI Index
@@ -65,7 +62,7 @@ jobs:
     uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
     with:
       enable_public_ecr: true
-      artifactory_registry_url: ${{ env.PUBLIC_ECR_REGISTRY_URL }}
-      artifactory_repository_url: ${{ env.PUBLIC_ECR_REPOSITORY_URL }}
+      artifactory_registry_url: 'public.ecr.aws'
+      artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
       image_artifact_name: 'emotion-classification'
       image_tag: ${{ github.sha }}
