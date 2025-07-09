@@ -1,0 +1,68 @@
+name: Build and Push Emotion Classification Image
+
+on:
+  push:
+    tags:
+      - v*
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  TAG_PREFIX: 'v'
+
+jobs:
+  format_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      version_tag: ${{ steps.set_tags.outputs.version_tag }}
+      alt_version_tag: ${{ steps.set_tags.outputs.alt_version_tag }}
+    steps:
+      - name: Set version tags
+        id: set_tags
+        run: |
+          echo "Ref name is ${{ github.ref_name }}"
+          echo "TAG_PREFIX is ${{ env.TAG_PREFIX }}"
+          # Assign REF_NAME without quotes
+          REF_NAME=${{ github.ref_name }}
+          TAG_PREFIX=${{ env.TAG_PREFIX }}
+          # Extract VERSION_TAG
+          VERSION_TAG=$(echo "$REF_NAME" | sed "s/^$TAG_PREFIX//" | xargs)
+          echo "Setting VERSION_TAG equal to $VERSION_TAG"
+          echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+          # Generate ALT_VERSION_TAG
+          ALT_VERSION_TAG=$(echo "$VERSION_TAG" | awk -F- '{print $1}')-${GITHUB_SHA::7}
+          echo "Setting ALT_VERSION_TAG equal to $ALT_VERSION_TAG"
+          echo "alt_version_tag=$ALT_VERSION_TAG" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build
+    needs: format_tag
+    uses: truefoundry/github-workflows-public/.github/workflows/build.yml@main
+    with:
+      image_tag: ${{ github.sha }}
+      enable_public_ecr: true
+      enable_jfrog: false
+      extra_image_tag: |
+        ${{ needs.format_tag.outputs.version_tag }}
+        ${{ needs.format_tag.outputs.alt_version_tag }}
+      image_artifact_name: 'emotion-classification'
+      artifactory_registry_url: 'public.ecr.aws'
+      artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
+
+  push_soci_index:
+    name: Push SOCI Index
+    needs: build
+    uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
+    with:
+      enable_public_ecr: true
+      artifactory_registry_url: 'public.ecr.aws'
+      artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
+      image_artifact_name: 'emotion-classification'
+      image_tag: ${{ github.sha }}
