@@ -56,7 +56,7 @@ jobs:
       artifactory_registry_url: 'public.ecr.aws'
       artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
     secrets:
-     ecr_role_arn: ${{ secrets.PUBLIC_ECR_IAM_ROLE_ARN }}
+      ecr_role_arn: ${{ secrets.PUBLIC_ECR_IAM_ROLE_ARN }}
 
   push_soci_index:
     name: Push SOCI Index
@@ -69,4 +69,4 @@ jobs:
       image_artifact_name: 'emotion-classification'
       image_tag: ${{ github.sha }}
     secrets:
-     ecr_role_arn: ${{ secrets.PUBLIC_ECR_IAM_ROLE_ARN }}
+      ecr_role_arn: ${{ secrets.PUBLIC_ECR_IAM_ROLE_ARN }}
