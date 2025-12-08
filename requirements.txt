@@ -4,4 +4,4 @@ torch==2.7.1; sys_platform != 'linux'
 transformers==4.55.0
 fastapi==0.104.1
 uvicorn==0.24.0.post1
-numpy==1.24.1
+numpy==1.26.4
