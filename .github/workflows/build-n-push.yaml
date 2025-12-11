@@ -60,7 +60,7 @@ jobs:
 
   push_soci_index:
     name: Push SOCI Index
-    needs: build
+    needs: [format_tag, build]
     uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
     with:
       enable_public_ecr: true
