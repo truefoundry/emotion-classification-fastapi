@@ -63,7 +63,8 @@ jobs:
     uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
     with:
       enable_public_ecr: true
-      ecr_repository_url: 'public.ecr.aws/truefoundrycloud'
+      artifactory_registry_url: 'public.ecr.aws'
+      artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
       image_artifact_name: 'emotion-classification'
       image_tag: ${{ github.sha }}
     secrets:
