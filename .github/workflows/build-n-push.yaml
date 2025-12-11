@@ -48,6 +48,7 @@ jobs:
     with:
       enable_public_ecr: true
       enable_jfrog: false
+      platforms: 'linux/amd64'
       extra_image_tag: |
         ${{ needs.format_tag.outputs.version_tag }}
         ${{ needs.format_tag.outputs.alt_version_tag }}
@@ -63,9 +64,10 @@ jobs:
     uses: truefoundry/github-workflows-public/.github/workflows/build-and-push-soci-index.yml@main
     with:
       enable_public_ecr: true
+      platforms: 'linux/amd64'
       artifactory_registry_url: 'public.ecr.aws'
       artifactory_repository_url: 'public.ecr.aws/truefoundrycloud'
       image_artifact_name: 'emotion-classification'
-      image_tag: ${{ github.sha }}
+      image_tag: ${{ needs.format_tag.outputs.version_tag }}
     secrets:
       ecr_role_arn: ${{ secrets.PUBLIC_ECR_IAM_ROLE_ARN }}
